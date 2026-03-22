@@ -20,13 +20,28 @@ async function authenticateRequest(req: CreateExpressContextOptions["req"]): Pro
     if (!sessionCookie) return null;
 
     const secret = new TextEncoder().encode(ENV.cookieSecret);
-    const { payload } = await jwtVerify(sessionCookie, secret);
+    const { payload } = await jwtVerify(sessionCookie, secret, { algorithms: ["HS256"] });
+
+    // Admin shortcut: skip DB lookup entirely
+    if (payload.role === 'admin') {
+      return {
+        id: 0,
+        openId: String(payload.openId ?? 'admin'),
+        name: String(payload.name ?? 'Admin'),
+        email: String(payload.email ?? ENV.adminEmail),
+        role: 'admin' as const,
+        loginMethod: 'password',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        lastSignedIn: new Date(),
+      };
+    }
+
     const openId = payload.openId as string | undefined;
     if (!openId) return null;
 
     let user = await db.getUserByOpenId(openId);
     if (!user) {
-      // Auto-create user for admin sessions
       await db.upsertUser({
         openId,
         name: "Admin",

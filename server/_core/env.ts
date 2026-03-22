@@ -4,6 +4,7 @@ export const ENV = {
   ownerOpenId: process.env.OWNER_OPEN_ID ?? "admin",
   isProduction: process.env.NODE_ENV === "production",
   // LLM
+  anthropicApiKey: process.env.ANTHROPIC_API_KEY ?? "",
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
   // Admin dashboard
   adminPassword: process.env.ADMIN_PASSWORD ?? "elexxia2026",

@@ -1,0 +1,41 @@
+CREATE TABLE `audit_results` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`auditId` int NOT NULL,
+	`overallScore` int NOT NULL,
+	`googlePresenceScore` int,
+	`webConversionScore` int,
+	`geoScore` int,
+	`napConsistencyScore` int,
+	`estimatedMonthlyLeak` float,
+	`diagnosis` json NOT NULL,
+	`recommendedPlan` enum('local_300','acceleration_500','domination_1000') NOT NULL,
+	`recommendedPlanReason` text,
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	CONSTRAINT `audit_results_id` PRIMARY KEY(`id`)
+);
+--> statement-breakpoint
+CREATE TABLE `audits` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`contactName` varchar(255) NOT NULL,
+	`contactEmail` varchar(320) NOT NULL,
+	`contactPhone` varchar(50),
+	`businessName` varchar(255) NOT NULL,
+	`businessSector` varchar(255) NOT NULL,
+	`businessCity` varchar(255) NOT NULL,
+	`websiteUrl` varchar(500),
+	`googleMapsUrl` varchar(500),
+	`averageTicket` float,
+	`profitMargin` float,
+	`monthlyNewClients` int,
+	`hasCommercialTeam` enum('yes','no','partial'),
+	`previousMarketingInvestment` enum('none','less_500','500_1000','more_1000'),
+	`mainBottleneck` enum('not_known','known_not_buying','high_acquisition_cost'),
+	`callTranscript` text,
+	`additionalNotes` text,
+	`status` enum('pending','analyzing','completed','error') NOT NULL DEFAULT 'pending',
+	`convertedToClient` enum('yes','no','in_progress') DEFAULT 'no',
+	`assignedPlan` enum('local_300','acceleration_500','domination_1000'),
+	`createdAt` timestamp NOT NULL DEFAULT (now()),
+	`updatedAt` timestamp NOT NULL DEFAULT (now()) ON UPDATE CURRENT_TIMESTAMP,
+	CONSTRAINT `audits_id` PRIMARY KEY(`id`)
+);

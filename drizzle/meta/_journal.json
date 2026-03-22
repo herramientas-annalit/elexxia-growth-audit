@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1774004754280,
+      "tag": "0000_next_bruce_banner",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1774004908917,
+      "tag": "0001_noisy_tyger_tiger",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1774036099219,
+      "tag": "0002_flawless_romulus",
+      "breakpoints": true
+    }
+  ]
+}

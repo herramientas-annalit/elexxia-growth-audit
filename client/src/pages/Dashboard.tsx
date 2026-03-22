@@ -180,6 +180,12 @@ export default function Dashboard() {
   // Panel de notas
   const [notesAuditId, setNotesAuditId] = useState<number | null>(null);
 
+  // Login form state (must be declared before any conditional returns)
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginError, setLoginError] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const loginInputRef = useRef<HTMLInputElement>(null);
+
   const utils = trpc.useUtils();
 
   const hasFilters = filterSector || filterCity || filterPipeline || filterPlan;
@@ -206,21 +212,6 @@ export default function Dashboard() {
     updatePipeline.mutate({ id, pipelineStage: stage as any });
   }, [updatePipeline]);
 
-  // ─── Guards de autenticación y rol ─────────────────────────────────────────
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "#080818" }}>
-        <Brain className="w-8 h-8 animate-pulse" style={{ color: "#3385FF" }} />
-      </div>
-    );
-  }
-
-  const [loginPassword, setLoginPassword] = useState("");
-  const [loginError, setLoginError] = useState("");
-  const [loginLoading, setLoginLoading] = useState(false);
-  const loginInputRef = useRef<HTMLInputElement>(null);
-  const utils = trpc.useUtils();
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginLoading(true);
@@ -236,13 +227,21 @@ export default function Dashboard() {
         setLoginLoading(false);
         return;
       }
-      await utils.auth.me.invalidate();
       window.location.reload();
     } catch {
       setLoginError("Error de conexión. Inténtalo de nuevo.");
       setLoginLoading(false);
     }
   };
+
+  // ─── Guards de autenticación y rol ─────────────────────────────────────────
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#080818" }}>
+        <Brain className="w-8 h-8 animate-pulse" style={{ color: "#3385FF" }} />
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
